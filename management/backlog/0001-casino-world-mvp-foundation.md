@@ -7,7 +7,7 @@
 - Surface: Cross-surface
 - Dependencies: None
 - Orca Run: `run_48a5d2b749e8`
-- Orca Task: `task_8d8efc4240de` (Claude, Dispatch `ctx_beb62d0361b5`); `task_a46b10997d0a` (Codex, Dispatch `ctx_438cb857bae1`)
+- Orca Task: `task_8d8efc4240de` (Claude, Dispatch `ctx_beb62d0361b5`); `task_a46b10997d0a` (Codex, Dispatch `ctx_e3adf6bc95c1`; startup failures `ctx_438cb857bae1`, `ctx_8700a08e69fb`)
 
 ## Context
 
