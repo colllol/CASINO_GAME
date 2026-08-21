@@ -2,7 +2,8 @@
 
 - Status: Draft for Owner review
 - Surface: Game design
-- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`
+- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`;
+  Phase 1 revision under `management/backlog/0003-phase1-rules-and-local-backend-contract.md`
 
 The shop is currency sink S2. It is the only place cosmetics enter a player's inventory.
 
@@ -13,7 +14,10 @@ The shop is currency sink S2. It is the only place cosmetics enter a player's in
 - Cosmetics are **cosmetic only**. No item may alter movement speed, luck, payout, heat
   gain, job pay, or any other simulation value. This is an invariant, not a guideline.
 - Purchases are permanent and non-refundable. There is no resale, no salvage, and no
-  player-to-player transfer (economy constraint C2).
+  voluntary player-to-player transfer (economy constraint C2).
+- Every cosmetic is `BOUND` at grant. Bound items are `PROTECTED`: they cannot be looted in a
+  robbery, equipped or not. A player who loses a robbery never loses their wardrobe. See
+  `robbery-and-pvp.md` section 3.
 - Cosmetics can never be wagered at a table.
 - Nothing in the shop is purchasable with real money.
 
@@ -64,6 +68,10 @@ buy, which is what makes the quest chain worth chasing socially.
   `police-and-heat.md` as a heat sink pressure.
 - Purchases are server-validated: the server checks price, `STANDING` requirement, heat
   tier, and wallet balance, then debits and grants atomically in one transaction.
+- The storefront is in a `HOSTILE` zone. A player walking to the tailor with 12,000 carried
+  `CASH` for an Exclusive item is the most valuable robbery target in the game, and that is
+  deliberate: it is the only risk attached to the largest sink. The counterplay is to bank at
+  the cage and withdraw at the last moment, which costs a walk rather than the money.
 
 ## 5. Invariants for implementation and test
 
@@ -75,6 +83,7 @@ buy, which is what makes the quest chain worth chasing socially.
 | SH4 | Equipping a cosmetic produces no server-side simulation change other than appearance |
 | SH5 | Insignia items cannot be obtained through the purchase path at any price |
 | SH6 | Purchases are idempotent under retry |
+| SH7 | Every cosmetic grant sets `BOUND`, and no code path clears it |
 
 ## 6. Open Owner decisions
 

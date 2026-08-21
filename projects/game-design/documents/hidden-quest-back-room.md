@@ -2,7 +2,8 @@
 
 - Status: Draft for Owner review
 - Surface: Game design
-- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`
+- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`;
+  Phase 1 revision under `management/backlog/0003-phase1-rules-and-local-backend-contract.md`
 
 The progression spine of the game: an undiscoverable-by-menu chain that turns a customer into
 the casino's owner. This is the content that makes the loop in `gdd-casino-world-mvp.md`
@@ -104,9 +105,15 @@ Grants `FLOOR_MANAGER`, the manager clip, and 5000 `CASH`.
 Requirements:
 
 - 10 shifts held as floor manager
-- 250,000 `CASH` on hand for the buyout
+- 250,000 `CASH` available for the buyout, counting `CASH.carried` plus `CASH.banked`
 - `HEAT` tier 0 and no outstanding debt
 - the owner seat is vacant, or the player enters `SUCCESSOR` and waits (see section 5)
+
+Banked cash counts, and the buyout is transacted in the manager's office, which is inside the
+casino `SAFE` zone. Nobody has to carry a quarter of a million `CASH` down a `HOSTILE` street
+to buy the casino. Requiring that would make the endgame a robbery lottery rather than an
+earning goal, and it would hand one robber the largest payday in the game for standing near a
+door.
 
 The buyout **destroys** 250,000 `CASH` (it is paid to the NPC house, which is not a wallet).
 This is the single largest sink in the game and it is the intended endgame money drain. It is
@@ -141,9 +148,11 @@ or is offline past the retention window. Owner decision D5 sets that window.
 
 `DEALER` is capped at 3 concurrent and is not scarce enough to need a queue.
 
-Design risk worth naming: on a four-player server, one player permanently holding the owner
+Design risk worth naming: on a small server, one player permanently holding the owner
 seat starves the chain's payoff for everyone else. The forfeiture rules exist to make the seat
-lose-able, but whether they are aggressive enough is an open balance question (D14).
+lose-able, but whether they are aggressive enough is an open balance question (D14). Ten
+concurrent players makes this worse than four did, because more players are queued behind one
+seat.
 
 ## 6. Side objective: the vault
 
@@ -178,6 +187,8 @@ Invariants use the `HQ` prefix so they cannot be confused with the quest stage I
 | HQ7 | `SUCCESSOR` does not debit the buyout until the seat is granted |
 | HQ8 | Insignia items are grantable only by quest stage completion (shop invariant SH5) |
 | HQ9 | The staff door's openable state is per-player and server-authoritative, not a client flag |
+| HQ10 | Insignia items, quest items, and note fragments are `BOUND` at grant and can never be looted, transferred, or destroyed by robbery (RB4, RB5) |
+| HQ11 | Quest stage progress is never altered by being robbed |
 
 HQ5 is the hardest one to test and needs a concurrency test with two players completing Q5
 requirements simultaneously.

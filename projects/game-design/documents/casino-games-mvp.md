@@ -2,10 +2,13 @@
 
 - Status: Draft for Owner review
 - Surface: Game design
-- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`
+- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`;
+  Phase 1 revision under `management/backlog/0003-phase1-rules-and-local-backend-contract.md`
 
-Three games ship in the MVP: slots, roulette, and blackjack. Together they cover the three
-play tempos (solo/instant, group/fast, group/deliberate) with one implementation each.
+Four games ship in the MVP: slots, roulette, blackjack, and the jackpot machine. The first
+three cover the three play tempos (solo/instant, group/fast, group/deliberate) with one
+implementation each. The jackpot machine, added by Owner direction in Phase 1, is the
+aspirational headline game: a solo machine whose prize pool grows from its own margin.
 
 ## 1. Rules that apply to every game
 
@@ -31,11 +34,11 @@ play tempos (solo/instant, group/fast, group/deliberate) with one implementation
 IDLE -> BETTING (open, timed) -> LOCKED (no new bets) -> RESOLVING -> PAYOUT -> IDLE
 ```
 
-| Phase | Slots | Roulette | Blackjack |
-| --- | --- | --- | --- |
-| BETTING window | player-paced | 20 s | 15 s |
-| Player decisions during round | none | none | hit/stand/double/split, 12 s per decision |
-| Typical round length | 4 s | 45 s | 60 to 120 s |
+| Phase | Slots | Roulette | Blackjack | Jackpot machine |
+| --- | --- | --- | --- | --- |
+| BETTING window | player-paced | 20 s | 15 s | player-paced |
+| Player decisions during round | none | none | hit/stand/double/split, 12 s per decision | none |
+| Typical round length | 4 s | 45 s | 60 to 120 s | 6 s |
 
 Timeouts are server-enforced. A blackjack decision timeout auto-stands. A betting timeout
 means no bet placed, not a forced bet.
@@ -192,7 +195,76 @@ When a player holds the `DEALER` role at this table:
 That last point is the one real cheating vector in the whole game and it must be tested
 explicitly. It is listed in `verification-notes.md`.
 
-## 6. Invariants for implementation and test
+## 6. Jackpot machine
+
+The fourth game. Mechanically it is a single-payline machine like slots, with one addition:
+a share of every wager's margin accrues into a server-side `jackpotPoolAccrued` balance, and
+one rare outcome pays that whole pool.
+
+### 6.1 Structure
+
+| Element | Specification |
+| --- | --- |
+| Cabinets | 1, on the casino floor, distinct from the 4 slot machines |
+| Stake | `CHIPS` only, fixed bet per spin (no bet sizing, so the pool contribution rate is uniform) |
+| Outcome space | A single uniform draw from a fixed, enumerable outcome set, exactly as slots |
+| Prize tiers | A base paytable plus one `JACKPOT` outcome |
+| Jackpot funding | `jackpotContributionBps` of each wager, routed into `jackpotPoolAccrued` |
+| Jackpot payout | The entire accrued pool, then the pool resets to `jackpotSeed` |
+| Pool visibility | Current pool is replicated to clients for display; it is server-owned |
+
+A fixed bet is a deliberate simplification, not an oversight. Variable bets on a progressive
+prize require either proportional eligibility (confusing) or a flat prize regardless of stake
+(exploitable by minimum-betting until the pool is large). One stake removes the whole class
+of problem.
+
+### 6.2 The pool is not a faucet
+
+This is the property that matters and it is the reason the game is admissible at all under
+economy constraint C4:
+
+- The pool is credited only from margin the machine itself generated. Nothing else funds it.
+- A payout debits the pool by exactly the amount paid; the pool never goes negative.
+- Therefore the machine cannot pay out more than players have already lost to it, plus the
+  one-time seed. See `economy-closed-loop.md` section 6.3.
+
+The seed is the only currency ever introduced from outside, it is a fixed one-time amount at
+first server start, and it is not a repeating faucet. If the Owner sets the seed to zero the
+machine is exactly zero-sum against its own players from the first spin.
+
+### 6.3 Unset parameters (Owner gate D22)
+
+Odds and paytables are the definition of a loss percentage, and this surface is not permitted
+to settle them. Every number below is therefore **unset**, and the server must refuse to
+enable the jackpot machine while any of them is unset.
+
+| Parameter | Meaning | Value |
+| --- | --- | --- |
+| `jackpotOutcomeSpace` | Size and composition of the outcome set | Unset - D22 |
+| `jackpotPaytable` | Base prize multipliers per winning outcome | Unset - D22 |
+| `jackpotHitOdds` | Probability of the `JACKPOT` outcome per spin | Unset - D22 |
+| `jackpotContributionBps` | Share of each wager routed to the pool | Unset - D22 |
+| `jackpotSeed` | Pool value at first start and after each hit | Unset - D22 |
+| `jackpotFixedStake` | The fixed per-spin bet in `CHIPS` | Unset - D22 |
+
+What this surface *does* commit to, and what the Owner is being asked to approve values
+against: the machine's total RTP including the jackpot contribution must be strictly below
+100%, must be derivable by exhaustive enumeration in the same way the slots figure is, and
+must be recorded with its derivation rather than asserted. An unverifiable jackpot paytable
+is not acceptable at any odds.
+
+### 6.4 Implementation notes
+
+- The outcome is drawn server-side from the CSPRNG at `RESOLVING`, and the pool is read and
+  debited in the same transaction group as the payout. A concurrent second hit must not be
+  able to pay the same pool twice.
+- Pool contribution, pool balance changes, and hits are all logged as authoritative events;
+  the pool balance must be reconstructable by replaying the log from the seed.
+- The visible pool counter is presentation. A client-side counter that drifts from the server
+  value is a display bug, never a payout input.
+- A disconnect mid-spin settles server-side exactly as slots do (invariant G4).
+
+## 7. Invariants for implementation and test
 
 | ID | Invariant |
 | --- | --- |
@@ -207,21 +279,33 @@ explicitly. It is listed in `verification-notes.md`.
 | G9 | A bet below table minimum or above table maximum is rejected server-side |
 | G10 | No payout can produce a fractional chip |
 | G11 | Table margin credits `houseMarginAccrued`; no table path mints currency into a wallet beyond a settled win |
+| G12 | The jackpot machine refuses to accept a wager while any D22 parameter is unset |
+| G13 | A jackpot payout equals the pool balance at draw time, debits the pool by exactly that amount, and resets it to `jackpotSeed` |
+| G14 | `jackpotPoolAccrued` never goes negative and is credited only by that machine's own margin |
+| G15 | Two concurrent jackpot hits cannot both be paid the same pool |
+| G16 | The jackpot machine's enumerated total RTP, including the pool contribution, is strictly below 100% |
+| G17 | The replicated pool counter is display-only; no payout reads a client-supplied pool value |
 
 G5 and G6 are cheap, deterministic, headless tests and should be the first automated checks
-written for this surface.
+written for this surface. G12 through G17 are equally cheap and should be written before the
+first jackpot cabinet is playable, because G15 is a duplication bug that is very hard to see
+in play and trivial to see in a test.
 
-## 7. Explicitly out of MVP scope
+## 8. Explicitly out of MVP scope
 
-Poker in any form (needs a player-vs-player rake model and a much larger UI), craps, baccarat,
-sports betting, progressive jackpots, side bets, insurance, tournaments, and any game whose
-outcome depends on another player's loss rather than the house.
+Poker in any form (needs a player-vs-player rake model and a much larger UI), craps,
+baccarat, sports betting, side bets, insurance, tournaments, multi-machine or cross-server
+linked jackpots, variable-stake progressive eligibility, and any game whose outcome depends on
+another player's loss rather than the house.
 
 Poker deserves a note: it is the most requested casino game and the worst fit for this
 economy, because the house takes a rake from a pot that players fund for each other. That is a
-transfer between players, which economy constraint C2 forbids in the MVP.
+transfer between players, which economy constraint C2 forbids in the MVP. Robbery does not
+change this: C2 now permits exactly one involuntary transfer path with a full state machine
+and heat consequences, which a rake is not.
 
-## 8. Open Owner decisions
+## 9. Open Owner decisions
 
 D2 (house edge targets), D11 (per-round reshuffle vs. realism), D12 (slot max bet of 100
-chips versus the 2500 table maximum). Recorded in `open-owner-decisions.md`.
+chips versus the 2500 table maximum), D22 (all jackpot machine odds, paytable, contribution
+share, seed, and fixed stake). Recorded in `open-owner-decisions.md`.
