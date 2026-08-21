@@ -6,8 +6,8 @@
 - Owner: Owner
 - Surface: Cross-surface
 - Dependencies: None
-- Orca Run: Pending
-- Orca Task: Pending
+- Orca Run: `run_48a5d2b749e8`
+- Orca Task: `task_8d8efc4240de` (Claude, Dispatch `ctx_beb62d0361b5`); `task_a46b10997d0a` (Codex, Dispatch `ctx_438cb857bae1`)
 
 ## Context
 
@@ -28,6 +28,10 @@ Four-signal rubric:
 Approval recorded: on 2026-08-21 the Owner requested an Orca-managed Codex/Claude workflow
 and explicitly requested Gangline as the durable task-management model. Technical choices
 remain proposed until the decision record is approved.
+
+Execution note: Phase 0 documentation tasks are dispatched in Orca with non-overlapping
+surface fences. No implementation task may start until the Owner gate on Decision 0001 is
+resolved.
 
 ## Scope
 
