@@ -1,6 +1,6 @@
 # 0004 - Phase 2 local persistence implementation and contract tests
 
-- Status: Open
+- Status: Closed
 - Priority: P0
 - Type: Feature
 - Owner: Owner
@@ -9,7 +9,7 @@
   `management/decisions/0001-engine-and-service-stack.md`,
   `management/decisions/0003-phase1-rules-revision.md`
 - Orca Run: `run_48a5d2b749e8`
-- Orca Task: correction `task_40f5fb238050` (pending dispatch); prior review `task_b9f5a12ac26c` / `ctx_74490ad67604` reported 65/65 tests but config alignment gap; child `phase2-backend`
+- Orca Task: `task_c7705e3d467a` / `ctx_140052f7d9bb` correction; prior review `task_b9f5a12ac26c` / `ctx_74490ad67604`; initial attempt `task_e8d45c9c8d2c` stopped before report; child `phase2-backend`
 
 ## Context
 
@@ -68,7 +68,17 @@ rules, public APIs, database schemas, credentials, or deployment configuration.
 
 ## Outcome
 
-- Files changed: Pending
-- Verified via: Pending
-- Evidence: Pending
-- Harness delta: Pending
+- Files changed: `backend/src/adapter.ts`, `tests/backend/adapter.test.ts`, `package.json`,
+  `package-lock.json`, `tsconfig.json`, `.gitignore`; merged from `c062539`.
+- Verified via: `npm install --ignore-scripts --no-audit --no-fund`; `npm run check`; `npm test`;
+  `git diff --check`; ASCII/whitespace/scope audit.
+- Evidence: TypeScript check passed; 1 Vitest file passed with 67/67 tests; jackpot defaults cover
+  MISS, LOW/MEDIUM/HIGH/EXTREME odds, 12 zone/tier stakes, and 3 zone seeds; idempotency,
+  transaction atomicity, journal recovery, event replay, lock, loot classification and hydration
+  tests pass. No HTTP/API/Postgres/EOS/Unreal files were changed.
+- Harness delta: Added a runnable Node/Vitest backend harness and lockfile, with correction tests
+  for config alignment and canonical idempotency fingerprints.
+
+Residual risks: `npm audit` reports 5 dependency vulnerabilities (3 moderate, 1 high, 1 critical);
+Windows target replacement still has an `rm` + `rename` fallback that needs a dedicated crash-
+durability hardening ticket before production use.
