@@ -78,9 +78,30 @@ resolved.
 - Run one server plus four clients and record observed behavior for the vertical slice.
 - Review every phase against its ticket scope before closing child tickets.
 
+## Phase 0 outcome
+
+Phase 0 documentation is complete. Claude produced nine game-design documents plus proposed
+Decision 0002; Codex produced the Unreal architecture document and surface README update.
+Both Orca Tasks report `succeeded` and are recorded above. Independent checks on 2026-08-21:
+
+- `git diff --check`: passed.
+- ASCII policy scan: passed.
+- Local Markdown link audit: 23 files scanned, 0 missing targets.
+- Verification assertion audit: T1-T28 present, 28 IDs, 0 missing.
+- Slots exhaustive enumeration: 8,000 combinations, 1,148 winning, RTP 94.825%, edge 5.175%.
+- Roulette paytable arithmetic: all seven bet families return 36/37 (0.972973), edge 2.7027%.
+- Unreal build/runtime: pending because no `.uproject`, Unreal installation, or test harness exists.
+
+Phase 0 remains awaiting Owner decisions D1-D16 and Decision 0001/0002 approval. No Phase 1
+implementation task should be dispatched before those gates are resolved.
+
 ## Outcome
 
-- Files changed: Pending
-- Verified via: Pending
-- Evidence: Pending
-- Harness delta: Pending
+- Files changed: Phase 0 documents under `projects/game-design/documents/`,
+  `projects/unreal/documents/`, and proposed `management/decisions/0002-mvp-economy-and-house-edge.md`.
+- Verified via: Orca worker reports; `git diff --check`; PowerShell exhaustive slots and roulette checks;
+  Markdown link and assertion-ID audits.
+- Evidence: Counts and observed results are recorded in the Phase 0 outcome above and in each surface's
+  `verification-notes.md` / `unreal-architecture-mvp.md`.
+- Harness delta: Added the 28-assertion design verification checklist, deterministic casino math checks,
+  and explicit Owner gates before Unreal/backend implementation.

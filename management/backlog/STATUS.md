@@ -7,7 +7,7 @@ This file is a derived index. Ticket files are authoritative for existence; each
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
-| [0001](0001-casino-world-mvp-foundation.md) | P0 | Casino world MVP foundation | Cross-surface | Claude, Codex | Owner | Phase 0 dispatched; approve architecture and execution phases |
+| [0001](0001-casino-world-mvp-foundation.md) | P0 | Casino world MVP foundation | Cross-surface | Claude, Codex | Owner | Phase 0 complete; approve Decision 0001/0002 and D1-D16 before Phase 1 |
 
 ## Open
 
