@@ -8,7 +8,7 @@
 - Dependencies: `management/decisions/0001-engine-and-service-stack.md`,
   `management/decisions/0002-mvp-economy-and-house-edge.md`
 - Orca Run: `run_48a5d2b749e8`
-- Orca Task: `task_cc01da393ffa` (Claude, Dispatch `ctx_f99270d7e966`, child `phase1-rules-backend`)
+- Orca Task: `task_cc01da393ffa` (Claude, Dispatch `ctx_acc30988cf83`; previous startup dispatch `ctx_f99270d7e966` failed after compact/update retries; child `phase1-rules-backend`)
 
 ## Context
 
