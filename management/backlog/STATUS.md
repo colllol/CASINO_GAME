@@ -14,10 +14,12 @@ This file is a derived index. Ticket files are authoritative for existence; each
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
 | [0002](0002-phase1-unreal-bootstrap.md) | P0 | Phase 1 Unreal bootstrap and offline prototype | Unreal | Codex | Unreal toolchain | Static pass merged `b0241b6`; install UE5.4 for Editor/Server/offline smoke |
+| [0005](0005-phase2-windows-durability-and-dependency-hardening.md) | P1 | Phase 2 Windows durability and dependency hardening | Backend + QA | Codex | None | Audit vulnerabilities and atomic replacement follow-up |
 ## Awaiting Owner
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
+| [0006](0006-phase3-multiplayer-vertical-slice.md) | P0 | Phase 3 ten-player multiplayer vertical slice | Unreal + Backend + QA | Codex | UE5.4 runtime evidence | Do not dispatch until ticket 0002 builds and offline smoke pass |
 
 ## Closed
 
