@@ -1,7 +1,7 @@
 # Decision 0002 - MVP economy model and house edge
 
-- Status: Proposed
-- Owner gate: Required
+- Status: Approved for Phase 1 design and prototype
+- Owner gate: Approved on 2026-08-21
 - Related ticket: `management/backlog/0001-casino-world-mvp-foundation.md`
 - Raised by: Game design surface, Phase 0
 - Detail: `projects/game-design/documents/economy-closed-loop.md`,
@@ -37,14 +37,18 @@ strategy with a full reshuffle every round.
 **Closed-loop guarantees.**
 
 1. No real-money purchase, deposit, withdrawal, or redemption of any in-game value.
-2. No player-to-player currency or item transfer of any kind.
+2. No voluntary player-to-player currency or item trading in the MVP. Server-controlled robbery
+   is a crime mechanic, not a trade: outside the casino safe zone, a successful robber may take
+   only inventory flagged `LOOTABLE` and carried `CASH` under the police/heat rules.
+   Equipped cosmetics, quest-critical items, starter protection items, and bound progression
+   items are never lootable. The victim is automatically in PvP state after the robbery attempt.
 3. No loot boxes, randomised paid rewards, currency packs, or wagering of cosmetics.
 4. All casino games are negative expected value for the player; no game is a net faucet.
 
-Guarantee 2 is the one worth deliberate attention: it is a real feature cut (no gifting, no
-trading, no player economy) bought in exchange for eliminating the account-farming and
-real-money-trade surface completely. It is far cheaper to add trading later than to retrofit
-anti-RMT controls onto a live economy.
+The no-trading rule is a real MVP feature cut bought in exchange for eliminating the
+account-farming and real-money-trade surface. Future voluntary trading requires a new Owner
+decision and anti-RMT design. Robbery remains bounded by lootability flags, safe zones,
+server authority, heat, and loss protection.
 
 ## Alternatives considered
 
@@ -83,7 +87,8 @@ blackjack needs either a betting-limit mechanism or removal from the MVP.
 
 ## Owner decision
 
-Pending. Record approval, rejection, or requested changes here before Phase 4 begins. Related
-open items are tabulated as D1 through D16 in
+Approved for Phase 1 design and prototype on 2026-08-21 by the Owner. The robbery boundary,
+10-player limit, and four-game MVP are recorded in the Phase 1 child tickets. Future voluntary
+trading remains out of scope and requires a new Owner gate. Related open items are tabulated as D1 through D16 in
 `projects/game-design/documents/open-owner-decisions.md`; D2, D3, D6, D11, D12, and D13 are the
 ones that change this record's numbers if answered differently.

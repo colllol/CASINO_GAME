@@ -29,9 +29,9 @@ Approval recorded: on 2026-08-21 the Owner requested an Orca-managed Codex/Claud
 and explicitly requested Gangline as the durable task-management model. Technical choices
 remain proposed until the decision record is approved.
 
-Execution note: Phase 0 documentation tasks are dispatched in Orca with non-overlapping
-surface fences. No implementation task may start until the Owner gate on Decision 0001 is
-resolved.
+Execution note: Phase 0 documentation tasks were dispatched in Orca with non-overlapping
+surface fences. The Owner approved Phase 1 on 2026-08-21; implementation remains bounded by
+child tickets 0002 and 0003, while external backend/public-release decisions remain gated.
 
 ## Scope
 
@@ -92,8 +92,9 @@ Both Orca Tasks report `succeeded` and are recorded above. Independent checks on
 - Roulette paytable arithmetic: all seven bet families return 36/37 (0.972973), edge 2.7027%.
 - Unreal build/runtime: pending because no `.uproject`, Unreal installation, or test harness exists.
 
-Phase 0 remains awaiting Owner decisions D1-D16 and Decision 0001/0002 approval. No Phase 1
-implementation task should be dispatched before those gates are resolved.
+Phase 0 is complete. Decision 0001 and Decision 0002 are approved for Phase 1 design/prototype
+work. Decisions D1-D16 and any external backend/public-release changes remain tracked as
+Owner gates; Phase 1 implementation is dispatched only through child tickets 0002 and 0003.
 
 ## Outcome
 
