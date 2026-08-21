@@ -7,7 +7,7 @@
 - Surface: Backend + QA
 - Dependencies: `management/backlog/0004-phase2-local-persistence-implementation.md`
 - Orca Run: `run_48a5d2b749e8`
-- Orca Task: Pending
+- Orca Task: `task_54c066c10cc9` (Claude, pending dispatch)
 
 ## Context
 
