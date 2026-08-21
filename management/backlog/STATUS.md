@@ -14,7 +14,7 @@ This file is a derived index. Ticket files are authoritative for existence; each
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
 | [0002](0002-phase1-unreal-bootstrap.md) | P0 | Phase 1 Unreal bootstrap and offline prototype | Unreal | Codex | Unreal toolchain | Static pass merged `b0241b6`; install UE5.4 for Editor/Server/offline smoke |
-| [0005](0005-phase2-windows-durability-and-dependency-hardening.md) | P1 | Phase 2 Windows durability and dependency hardening | Backend + QA | Claude | None | `task_54c066c10cc9`; audit vulnerabilities and atomic replacement follow-up |
+| [0005](0005-phase2-windows-durability-and-dependency-hardening.md) | P1 | Phase 2 Windows durability and dependency hardening | Backend + QA | Claude | None | `ctx_760ec4fc8b1b` / `phase2-hardening`; audit vulnerabilities and atomic replacement follow-up |
 ## Awaiting Owner
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
