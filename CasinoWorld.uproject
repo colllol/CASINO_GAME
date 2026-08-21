@@ -1,0 +1,17 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.4",
+  "Category": "Games",
+  "Description": "Casino World Phase 1 offline prototype",
+  "Modules": [
+    {
+      "Name": "CasinoWorld",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "TargetPlatforms": [ "Win64" ],
+  "AdditionalProperties": {
+    "StartInVR": false
+  }
+}

@@ -1,0 +1,5 @@
+Name,DisplayName,PrototypeEnabled
+SLOTS,Slots,true
+ROULETTE,Roulette,true
+BLACKJACK,Blackjack,true
+JACKPOT_MACHINE,Jackpot Machine,true
