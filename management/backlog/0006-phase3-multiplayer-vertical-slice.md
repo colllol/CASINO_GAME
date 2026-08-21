@@ -48,4 +48,3 @@ Move this ticket to Open only after those commands produce observed evidence.
 - Verified via: Pending
 - Evidence: Pending
 - Harness delta: Pending
-
