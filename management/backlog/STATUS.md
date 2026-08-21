@@ -7,14 +7,14 @@ This file is a derived index. Ticket files are authoritative for existence; each
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
-| [0001](0001-casino-world-mvp-foundation.md) | P0 | Casino world MVP foundation | Cross-surface | Claude, Codex | Owner | Phase 0 complete; approve Decision 0001/0002 and D1-D16 before Phase 1 |
+| [0001](0001-casino-world-mvp-foundation.md) | P0 | Casino world MVP foundation | Cross-surface | Claude, Codex | Owner | Phase 1 active; D17/D18/D22 remain |
 
 ## Open
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
 | [0002](0002-phase1-unreal-bootstrap.md) | P0 | Phase 1 Unreal bootstrap and offline prototype | Unreal | Codex | Unreal toolchain | Static pass merged `b0241b6`; install UE5.4 for Editor/Server/offline smoke |
-| [0003](0003-phase1-rules-and-local-backend-contract.md) | P0 | Phase 1 rules and local backend adapter contract | Game design + Backend | Claude | Owner for future service contract | `ctx_acc30988cf83` / `phase1-rules-backend`; retrying adapter contract after prior startup failure |
+| [0003](0003-phase1-rules-and-local-backend-contract.md) | P0 | Phase 1 rules and local backend adapter contract | Game design + Backend | Claude | D17/D18/D22 | Merged `d290b4f`; adapter/event log and T29-T78 complete |
 ## Awaiting Owner
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |

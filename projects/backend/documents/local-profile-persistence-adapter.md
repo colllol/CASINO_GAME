@@ -18,10 +18,12 @@ It does **not** define an HTTP API, a wire protocol, or a SQL schema. Those requ
 
 ## 1. Why a local adapter and not the real service
 
-Decision 0001 proposes TypeScript plus PostgreSQL and is still an open Owner gate (D16).
+Decision 0001 approves the Phase 1 boundary and keeps TypeScript plus PostgreSQL as the future
+replacement service; the external service contract remains a later gate.
 Phase 1 has to prove the rules work: robbery settlement, jackpot pool accounting, heat,
-reconnect, and idempotent payouts. Every one of those needs durable state. Waiting for D16
-blocks the phase; picking a service shape now front-runs the Owner's decision.
+reconnect, and idempotent payouts. Every one of those needs durable state. Waiting for the
+external service contract would block the phase; picking a service shape now front-runs the
+Owner's decision.
 
 The resolution is a **local, in-process, file-backed adapter behind an interface narrow enough
 that replacing the implementation is a backend-only change.** The gameplay code calls the
@@ -329,7 +331,6 @@ forces a choice, those five come first.
 
 ## 13. Open Owner decisions
 
-D16 (confirm Decision 0001, which sets what this adapter is eventually replaced by), D25
-(confirm this local adapter for Phase 1), D7 (offline heat decay rate, which this adapter
+D25 (confirm this local adapter for Phase 1), D7 (offline heat decay rate, which this adapter
 stores but does not choose), D17 and D22 (the unset parameters in section 9). All recorded in
 `projects/game-design/documents/open-owner-decisions.md`.

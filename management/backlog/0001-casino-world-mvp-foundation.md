@@ -93,8 +93,9 @@ Both Orca Tasks report `succeeded` and are recorded above. Independent checks on
 - Unreal build/runtime: pending because no `.uproject`, Unreal installation, or test harness exists.
 
 Phase 0 is complete. Decision 0001 and Decision 0002 are approved for Phase 1 design/prototype
-work. Decisions D1-D16 and any external backend/public-release changes remain tracked as
-Owner gates; Phase 1 implementation is dispatched only through child tickets 0002 and 0003.
+work. The remaining Phase 1 gates are D17/D18 for robbery loss/cooldown and D22 for jackpot
+odds/paytable/seed/stake; external backend/public-release changes remain gated. Phase 1
+implementation is dispatched through child tickets 0002 and 0003.
 
 ## Outcome
 

@@ -57,7 +57,14 @@ proposed decision record only when a new Owner gate is necessary. Do not edit Un
 
 ## Outcome
 
-- Files changed: Pending
-- Verified via: Pending
-- Evidence: Pending
-- Harness delta: Pending
+- Files changed: 15 files on branch `d290b4f`, merged into `main`: game-design rule updates,
+  `robbery-and-pvp.md`, local profile adapter, authoritative event log, backend README, and
+  proposed Decision 0003.
+- Verified via: Claude/ORCA worker report; `git diff --check`; 25-file ASCII/whitespace scan;
+  Markdown, assertion, invariant, and scope audits.
+- Evidence: 25 files scanned, 0 non-ASCII, 0 tabs, 0 trailing whitespace; 30 Markdown files and
+  94 local targets with 0 missing after PM base reconciliation; T1-T78 with 0 duplicates/gaps;
+  94 cited invariants all defined; 0 files outside the worker fence. No runtime/API/deployment
+  evidence was expected or claimed.
+- Harness delta: Added PA1-PA20 and EL1-EL17 persistence/event-log invariants, robbery/jackpot
+  refusal rules, and T29-T78 verification assertions. D17, D18, and D22 remain fail-closed gates.

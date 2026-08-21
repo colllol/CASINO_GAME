@@ -134,8 +134,9 @@ that argument fails and this record should be reopened.
 
 ## Owner decision
 
-Pending. Record approval, rejection, or requested changes here before Phase 1 implementation
-begins. The related open items are D17 through D25 in
+Owner-approved for Phase 1 direction on 2026-08-21: Windows-only, ten players, four games,
+no voluntary trading, hostile-zone robbery/PvP, and the local adapter boundary. Decision 0003
+remains Proposed until D17, D18, and D22 are resolved. The related open items are D17 through D25 in
 `projects/game-design/documents/open-owner-decisions.md`. D17 and D22 are the two that no
 verification pass can work around, because they are the loss percentages and odds this project has
 deliberately left unset; D21 is the amendment to Decision 0002 guarantee 2 that item 4 requires.
