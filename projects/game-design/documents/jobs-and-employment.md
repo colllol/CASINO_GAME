@@ -2,7 +2,8 @@
 
 - Status: Draft for Owner review
 - Surface: Game design
-- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`
+- Ticket: `management/backlog/0001-casino-world-mvp-foundation.md`;
+  Phase 1 revision under `management/backlog/0003-phase1-rules-and-local-backend-contract.md`
 
 Jobs are the economy's faucets (F1 to F4 in `economy-closed-loop.md`). This document
 defines the shared job framework and the MVP job set.
@@ -113,15 +114,22 @@ quest chain and are represented by an employment role on the character.
 
 ## 5. Multiplayer contention
 
-The MVP supports four concurrent players, so contention is real:
+The MVP supports ten concurrent players, so contention is real:
 
 - J1 and J4 instance per player; no contention.
-- J2 and J3 have a shared station with 2 slots each; a full station shows a short queue.
+- J2 and J3 have a shared station with 2 slots each; a full station shows a short queue. At
+  ten players a two-slot station is the tightest bottleneck in the game and the queue length
+  is a balance measurement, not an assumption.
 - There is exactly **one** `FLOOR_MANAGER` and **one** `OWNER` per server at a time. If a
   second player completes Q5 while the seat is held, they enter a `SUCCESSOR` state and take
   the seat when it is vacated by forfeit or logout beyond the retention window. Owner
   decision D5 covers the retention window length.
 - Up to 3 concurrent `DEALER` roles (one per table plus one relief).
+
+Job routes run through `HOSTILE` zones, so a player carrying job earnings is a robbery target
+on the way back. J1 in particular crosses the street block repeatedly. That is intended
+pressure and it is the reason the cage accepts deposits: the counterplay is to bank between
+runs, not to avoid the job.
 
 ## 6. Anti-exploit notes
 
@@ -130,7 +138,14 @@ The MVP supports four concurrent players, so contention is real:
 - Job cooldowns are stored per-player server-side and survive reconnect.
 - Dealer margin share is computed from settled rounds only, so a dealer cannot inflate it
   by dealing to a colluding partner: collusion still requires real losses to generate margin,
-  and there is no player-to-player transfer to recover them (economy constraint C2).
+  and there is no voluntary player-to-player transfer to recover them (economy constraint C2).
+  Robbery does not reopen this: it is involuntary, arbitrated by a state machine, and costs the
+  robber heat, so it cannot be used as a settlement channel between colluding accounts. See
+  `robbery-and-pvp.md` section 5.
+- Active job items (parcels, the cash box, the envelope) are bound to their `jobInstanceId`
+  and are `PROTECTED` from robbery, so a robbery can never break job payout idempotency.
+- A player on a casino employment shift cannot initiate a robbery (invariant RB15), which
+  stops a dealer from stepping outside mid-shift to rob a departing winner.
 
 ## 7. Open Owner decisions
 

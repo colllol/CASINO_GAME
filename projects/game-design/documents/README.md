@@ -11,15 +11,22 @@ disagrees with a system document, the system document is normative.
 
 | Document | Contents |
 | --- | --- |
-| [gdd-casino-world-mvp.md](gdd-casino-world-mvp.md) | Concept, pillars, player loop, world, MVP scope fence, risk register |
+| [gdd-casino-world-mvp.md](gdd-casino-world-mvp.md) | Concept, pillars, player loop, world, platform and scale, MVP scope fence, risk register |
 | [economy-closed-loop.md](economy-closed-loop.md) | Currencies, the exhaustive faucet and sink lists, house edge, invariants |
 | [jobs-and-employment.md](jobs-and-employment.md) | Job framework, 3 legal jobs, 1 crime job, dealer/manager/owner roles |
-| [casino-games-mvp.md](casino-games-mvp.md) | Slots, roulette, blackjack: rules, paytables, derived RTP, round phases |
+| [casino-games-mvp.md](casino-games-mvp.md) | Slots, roulette, blackjack, jackpot machine: rules, paytables, derived RTP, round phases |
+| [robbery-and-pvp.md](robbery-and-pvp.md) | Zone hostility, automatic PvP, the robbery state machine, LOOTABLE/PROTECTED classification |
 | [shop-and-cosmetics.md](shop-and-cosmetics.md) | Equip slots, rarity tiers, pricing ladder, cosmetic-only guarantees |
 | [hidden-quest-back-room.md](hidden-quest-back-room.md) | The Q0-Q5 chain from customer to casino owner |
 | [police-and-heat.md](police-and-heat.md) | Heat tiers, gains, decay, pursuit, arrest, casino interlocks |
-| [open-owner-decisions.md](open-owner-decisions.md) | D1-D16: questions this surface deliberately left to the Owner |
-| [verification-notes.md](verification-notes.md) | What Phase 0 verified, and the test obligations these documents impose |
+| [open-owner-decisions.md](open-owner-decisions.md) | D1-D25: questions this surface deliberately left to the Owner |
+| [verification-notes.md](verification-notes.md) | What Phase 0 and Phase 1 verified, and the test obligations these documents impose |
 
-All of the above are Draft for Owner review. Proposed economy decision record:
-`management/decisions/0002-mvp-economy-and-house-edge.md`.
+All of the above are Draft for Owner review. Proposed decision records:
+`management/decisions/0002-mvp-economy-and-house-edge.md` (economy and house edge) and
+`management/decisions/0003-phase1-rules-revision.md` (the Phase 1 rules revision: Windows,
+ten players, the fourth game, and robbery).
+
+The Phase 1 backend contracts that these documents depend on live on the backend surface:
+`projects/backend/documents/local-profile-persistence-adapter.md` and
+`projects/backend/documents/authoritative-event-log.md`.
