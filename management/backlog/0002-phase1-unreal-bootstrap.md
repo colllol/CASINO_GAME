@@ -7,7 +7,7 @@
 - Surface: Unreal
 - Dependencies: `management/decisions/0001-engine-and-service-stack.md`
 - Orca Run: `run_48a5d2b749e8`
-- Orca Task: `task_e50d59388e15` (Codex, Dispatch `ctx_5ffd5badc75e`, child `phase1-unreal`)
+- Orca Task: `task_e50d59388e15` (Codex, Dispatch `ctx_5ffd5badc75e`, child `phase1-unreal`); correction `task_55bd79ef906b` / `ctx_be910ad91130`
 
 ## Context
 
@@ -57,7 +57,13 @@ documents, backend contracts, or production economy rules.
 
 ## Outcome
 
-- Files changed: Pending
-- Verified via: Pending
-- Evidence: Pending
-- Harness delta: Pending
+- Files changed: `CasinoWorld.uproject`, `Source/`, `Config/`, `Content/`, `Tools/`,
+  `projects/unreal/documents/phase1-bootstrap.md` (29 files), merged from `78ef254`.
+- Verified via: `Tools/Test-OfflinePrototype.ps1`; PowerShell parser audit; ASCII/whitespace/scope audit;
+  `git diff --check`.
+- Evidence: Static smoke passed `module=1`, `targets=3`, `ids=4`, `maxPlayers=10`, `seams=5`,
+  `cameraRelease=7`; 29 files, ASCII pass, whitespace pass, scope pass. Unreal build/offline smoke is
+  blocked because `UNREAL_ROOT` is unset and UE executables are not installed/discoverable.
+- Harness delta: Added static prototype smoke, build and offline smoke scripts, local profile persistence
+  seam, and camera/seat-release assertions. Keep ticket Open until UE5.4 is provisioned and Editor/Server
+  builds plus offline runtime smoke are observed.
