@@ -14,11 +14,11 @@ This file is a derived index. Ticket files are authoritative for existence; each
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
 | [0002](0002-phase1-unreal-bootstrap.md) | P0 | Phase 1 Unreal bootstrap and offline prototype | Unreal | Codex | Unreal toolchain | Static pass merged `b0241b6`; install UE5.4 for Editor/Server/offline smoke |
-| [0003](0003-phase1-rules-and-local-backend-contract.md) | P0 | Phase 1 rules and local backend adapter contract | Game design + Backend | Claude | D17/D18/D22 | Merged `d290b4f`; adapter/event log and T29-T78 complete |
 ## Awaiting Owner
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
+| [0003](0003-phase1-rules-and-local-backend-contract.md) | P0 | Phase 1 rules and local backend adapter contract | Game design + Backend | Claude | D17/D18/D22 | Contract complete; resolve robbery and jackpot parameters |
 
 ## Closed
 

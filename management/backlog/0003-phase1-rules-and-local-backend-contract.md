@@ -1,6 +1,6 @@
 # 0003 - Phase 1 rules update and local backend adapter contract
 
-- Status: Open
+- Status: Awaiting Owner
 - Priority: P0
 - Type: Feature
 - Owner: Owner
