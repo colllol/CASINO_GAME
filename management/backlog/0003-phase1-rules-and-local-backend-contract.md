@@ -1,6 +1,6 @@
 # 0003 - Phase 1 rules update and local backend adapter contract
 
-- Status: Awaiting Owner
+- Status: Closed
 - Priority: P0
 - Type: Feature
 - Owner: Owner
@@ -67,4 +67,5 @@ proposed decision record only when a new Owner gate is necessary. Do not edit Un
   94 cited invariants all defined; 0 files outside the worker fence. No runtime/API/deployment
   evidence was expected or claimed.
 - Harness delta: Added PA1-PA20 and EL1-EL17 persistence/event-log invariants, robbery/jackpot
-  refusal rules, and T29-T78 verification assertions. D17, D18, and D22 remain fail-closed gates.
+  config validation, and T29-T78 verification assertions. Post-MVP balance changes remain
+  versioned follow-up work.

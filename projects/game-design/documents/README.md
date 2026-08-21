@@ -19,7 +19,7 @@ disagrees with a system document, the system document is normative.
 | [shop-and-cosmetics.md](shop-and-cosmetics.md) | Equip slots, rarity tiers, pricing ladder, cosmetic-only guarantees |
 | [hidden-quest-back-room.md](hidden-quest-back-room.md) | The Q0-Q5 chain from customer to casino owner |
 | [police-and-heat.md](police-and-heat.md) | Heat tiers, gains, decay, pursuit, arrest, casino interlocks |
-| [open-owner-decisions.md](open-owner-decisions.md) | D1-D25: questions this surface deliberately left to the Owner |
+| [open-owner-decisions.md](open-owner-decisions.md) | D1-D25: decision register with Phase 1 resolutions and post-MVP gates |
 | [verification-notes.md](verification-notes.md) | What Phase 0 and Phase 1 verified, and the test obligations these documents impose |
 
 All of the above are Draft for Owner review. Proposed decision records:

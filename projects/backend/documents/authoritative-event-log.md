@@ -123,15 +123,16 @@ question "was this legitimate" must be answerable from the log without re-runnin
 
 Refusal causes are enumerated so that RB2, RB13, and RB15 are each observable as a distinct
 logged reason: victim in a `SAFE` zone, aggressor in a `SAFE` zone, victim immune, out of range,
-line of sight broken, aggressor on a casino shift, aggressor on cooldown, robbery disabled
-because a D17 parameter is unset.
+line of sight broken, aggressor on a casino shift, robbery target carries no eligible value, or
+robbery config is invalid.
 
 Logging refusals matters more than it looks. A robbery system that silently drops invalid
 attempts is indistinguishable in the log from one whose zone volumes are authored wrong, and
 zone authoring is exactly the kind of thing that will be wrong at least once.
 
 `ROBBERY_SETTLED` records the share and cap **in force at settlement**, not just the amount. When
-D17 is answered and later retuned, the log still explains why an old robbery took what it took.
+The configured robbery defaults and later developer retunes are recorded with each settlement,
+so the log still explains why an old robbery took what it took.
 
 ### 3.4 Heat, police, and access
 
@@ -241,7 +242,7 @@ stops being evidence and becomes decoration.
 | EL14 | All money amounts in the log are integer minor units |
 | EL15 | `occurredAtUtc` is always a server clock value |
 | EL16 | Every server-side interlock refusal writes an `INTERLOCK_REFUSED` event |
-| EL17 | A fail-closed startup refusal writes `SERVER_REFUSED_START` naming the unset parameter or version |
+| EL17 | A fail-closed startup refusal writes `SERVER_REFUSED_START` naming the missing/invalid parameter or version |
 
 EL10 and EL11 are the two assertions that prove the log is complete rather than merely present.
 EL5 and EL6 are the two that keep the economy auditable. EL8 is the one that makes an
@@ -249,7 +250,6 @@ involuntary transfer defensible. If a test budget forces a choice, those five co
 
 ## 9. Open Owner decisions
 
-None originate here. The log records whatever D7, D17, D18, and D22 are answered with, and
-section 3.3 is written so that a later change to those values remains explicable from old
-entries. Decisions are recorded in
+None originate here. The log records D7 and any later balance tuning, and section 3.3 is written
+so that a later change to those values remains explicable from old entries. Decisions are recorded in
 `projects/game-design/documents/open-owner-decisions.md`.

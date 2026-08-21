@@ -4,7 +4,7 @@
 - Surface: Game design
 - Ticket: `management/backlog/0003-phase1-rules-and-local-backend-contract.md`
 - Phase: 1
-- Related decision: `management/decisions/0003-phase1-rules-revision.md` (proposed)
+- Related decision: `management/decisions/0003-phase1-rules-revision.md` (Phase 1 direction approved; balance defaults recorded below)
 - Supersedes: the "no player-versus-player" line in `gdd-casino-world-mvp.md` section 6
 
 This document is normative for zone hostility, robbery, the LOOTABLE / PROTECTED item
@@ -53,16 +53,18 @@ Outside `SAFE` volumes, PvP is on. There is no opt-in, no consent prompt, no fla
 and no PvE server mode. "Automatic" is the whole point: a player cannot audit whether the
 stranger walking towards them is a threat, which is what makes banking a decision.
 
-Three bounded exceptions exist, and they are anti-griefing measures rather than opt-outs:
+One bounded exception exists, and it is an anti-griefing measure rather than an opt-out. There
+is no immunity after being robbed:
 
 | Exception | Duration | Reason |
 | --- | --- | --- |
 | Spawn immunity | 15 s after login or respawn | Stops spawn camping |
-| Zone-exit immunity | 5 s after crossing `SAFE` -> `HOSTILE` | Stops door camping the casino exit |
-| Victim recovery immunity | 120 s after being robbed | Stops the same player being farmed in a loop |
+| Victim recovery immunity | None | The Owner explicitly chose no post-robbery immunity |
 
-Immunity blocks being robbed. It does not let an immune player rob someone else: initiating
-a robbery drops immunity immediately. Otherwise immunity becomes a free first strike.
+Spawn protection only applies to its listed window. A victim who was just robbed
+can be robbed again if they are carrying eligible value and normal server preconditions pass.
+Network commands still use a transport-level rate limit; this is anti-spam protection, not a
+gameplay robbery cooldown.
 
 ## 3. Item and value classification
 
@@ -76,9 +78,8 @@ another player's inventory.
 
 | Value | Notes |
 | --- | --- |
-| Carried `CASH` | The on-hand balance only. This is the primary robbery target |
-| Contraband crates (job J4) | Already destructible on arrest; now also transferable by robbery |
-| Unbound carried consumables | Bar drinks and similar; negligible value, listed for completeness |
+| Carried `CASH` | The entire on-hand balance is transferred on a successful robbery |
+| Explicitly `LOOTABLE` carried items | The aggressor chooses zero or more eligible items in the loot window |
 | Robbery proceeds | Cash taken in a robbery is itself carried `CASH`, so it can be re-robbed |
 
 ### 3.2 PROTECTED
@@ -113,13 +114,13 @@ IDLE
   -> CONTESTED   (fixed window; victim may flee, break line of sight, resist, or comply)
   -> (RESOLVED_SUBDUED | RESOLVED_ESCAPED | RESOLVED_ABORTED)
   -> SETTLED     (only from RESOLVED_SUBDUED; one transaction group)
-  -> AFTERMATH   (heat applied to the aggressor, recovery immunity to the victim)
+  -> AFTERMATH   (heat applied to the aggressor; no post-robbery immunity)
 ```
 
 Preconditions checked server-side at `INITIATED`, all of them:
 
 1. Aggressor and victim are both in a `HOSTILE` zone.
-2. Victim holds no active immunity from section 2.1.
+2. Any spawn protection from section 2.1 has expired.
 3. Aggressor is within 3 m with unbroken line of sight.
 4. Aggressor is not on shift in any casino employment role.
 5. The server's robbery economy parameters are configured (section 6).
@@ -154,8 +155,8 @@ Four properties do the work:
    is a defect, not a partial success.
 2. **No consent, so no delivery guarantee.** Real-money trade needs a seller who can promise
    delivery. A robber cannot promise to be robbed, and a victim cannot promise to be found.
-3. **Nothing bound can move.** Every durable status object in the game is `BOUND`, so the
-   only thing that changes hands is fungible carried `CASH` the victim chose not to bank.
+3. **Nothing protected can move.** The entire carried `CASH` balance moves, plus only the
+   explicitly selected `LOOTABLE` items. Cosmetics, quest items, and bound items never move.
 4. **Heat prices it.** Robbery raises the aggressor's heat, and heat is priced in casino
    access, so a career robber loses the ability to spend what they take.
 
@@ -165,30 +166,27 @@ robber pays heat. Detection is therefore not required in the MVP; the design rem
 incentive instead of policing the behaviour. Written down explicitly so a later change that
 makes robbery net-positive is recognised as the economy break that it would be.
 
-## 6. Unset economy parameters (Owner gate)
+## 6. Owner-approved robbery parameters
 
-How much a robbery takes is a loss percentage, which this surface is not permitted to
-settle. The parameters below are therefore declared with **no default value**. They are
-server configuration, read at startup, and the server must **refuse to enable robbery** while
-any of them is unset. Failing closed is deliberate: an accidental zero would silently ship a
-robbery system that takes nothing, and an accidental 100 would ship one that takes
-everything.
+The Owner chose full carried-cash loss with optional loot selection. These values are server
+configuration and are versioned with the build. The client cannot change them.
 
 | Parameter | Meaning | Value |
 | --- | --- | --- |
-| `robberyCarriedCashShareBps` | Share of the victim's carried `CASH` transferred on a successful robbery, in basis points | Unset - Owner gate D17 |
-| `robberyCarriedCashCap` | Absolute per-robbery ceiling on transferred `CASH`, if any | Unset - Owner gate D17 |
-| `robberyContrabandShare` | Whether a successful robbery takes all, some, or none of the carried crates | Unset - Owner gate D17 |
-| `robberyCooldownSeconds` | Per-aggressor cooldown between robberies | Unset - Owner gate D18 |
+| `robberyCarriedCashShareBps` | Share of the victim's carried `CASH` transferred | `10000` (100%) |
+| `robberyCarriedCashCap` | Absolute per-robbery ceiling | `NONE` |
+| `robberyLootSelection` | Which item value can be selected | `LOOTABLE_ONLY`, zero or more selected items |
+| `robberyCooldownSeconds` | Per-aggressor gameplay cooldown | `0` |
+| `victimRecoveryImmunitySeconds` | Post-robbery gameplay immunity | `0` |
 
-Everything else in this document is a mechanism, a boundary, or a safety property, and none
-of it depends on the values above. Implementation of the state machine, the zone volumes, the
-classification, and the logging can proceed while D17 and D18 are open; only the transfer
-magnitude is blocked.
+Every other value in this document is a mechanism, boundary, or safety property. A robbery
+attempt is only available when the victim carries `CASH` or at least one selected-value item;
+an empty target cannot be robbed. Packet rate limiting remains a technical anti-spam measure,
+not a gameplay cooldown.
 
 Balance-shaped values that are *not* loss percentages follow the Phase 0 convention and are
 proposed starting points for balance testing, not final tuning: the 3 m initiation range, the
-2 s line-of-sight break, and the three immunity durations in section 2.1.
+2 s line-of-sight break, and the spawn protection duration in section 2.1.
 
 ## 7. Heat and the police
 
@@ -213,7 +211,7 @@ four levers, all of which existed before robbery and now have teeth:
 | Bank the cash | Banked `CASH` is `PROTECTED`. The one decision that makes a player unrobbable in practice |
 | Reach a `SAFE` volume | Always a sufficient escape, from any point in `CONTESTED` |
 | Break line of sight | 2 continuous seconds ends the attempt |
-| Resist | Wins the contest outright and applies the aggressor's cooldown |
+| Resist | Wins the contest outright; no gameplay cooldown is applied |
 
 Losses are bounded by construction: a robbed player keeps their bank, their chips, their
 cosmetics, their Insignia items, their quest progress, their role, and their starter
@@ -225,7 +223,7 @@ made, not an outcome they were handed.
 - Lethal combat, weapons, health, damage, or death (open decision D19).
 - Robbing NPCs, shops, the cage, or the vault. The vault remains a quest object only.
 - Robbery inside any `SAFE` volume, by any mechanism, including reaching through a boundary.
-- Item stealing of any kind. Only carried `CASH` and contraband move.
+- Stealing protected items. Only carried `CASH` and explicitly `LOOTABLE` items can move.
 - Voluntary trading, gifting, dropping items for another player, or a shared stash. All of
   these are delivery mechanisms and all remain banned by economy constraint C2.
 - Bounty, revenge-marking, or player-versus-player heat mechanics.
@@ -248,9 +246,9 @@ implementation agent. A dropped item is a voluntary transfer with extra steps.
 | RB8 | A robbery settles exactly once; replay with the same `robberyId` returns the stored result |
 | RB9 | Disconnect by either party during `CONTESTED` resolves server-side and never leaves value in limbo |
 | RB10 | Disconnect by the victim after `RESOLVED_SUBDUED` still settles; logging off is not an escape |
-| RB11 | Wallets never go negative during settlement; the transfer is clamped to the victim's carried balance (economy I2) |
-| RB12 | Immunity windows are server-tracked; initiating a robbery drops the initiator's immunity |
-| RB13 | The server refuses to enable robbery while any section 6 parameter is unset |
+| RB11 | Wallets never go negative during settlement; all carried `CASH` is transferred and cannot exceed the victim's balance (economy I2) |
+| RB12 | No gameplay cooldown or post-robbery victim immunity exists; transport rate limits cannot alter robbery eligibility |
+| RB13 | The server refuses to enable robbery while section 6 configuration is missing, invalid, or client-editable |
 | RB14 | Every state transition and every settlement writes an append-only authoritative event (backend logging contract) |
 | RB15 | A player on a casino employment shift cannot initiate a robbery |
 | RB16 | No API accepts a *voluntary* transfer between accounts; robbery is the only transfer path and it requires the full state machine (economy I9 as amended) |
@@ -261,7 +259,7 @@ those five come first.
 
 ## 11. Open Owner decisions
 
-D17 (robbery transfer share and cap), D18 (robbery cooldown), D19 (non-lethal subdual versus
-lethal combat), D20 (whether a carried-cash cap should exist at all), D21 (amending economy
-constraint C2 from "no transfer" to "no voluntary transfer"). Recorded in
+D19 (non-lethal subdual versus lethal combat), D20 (whether a carried-cash cap should exist at
+all). D17, D18, and D21 are resolved for Phase 1: transfer all carried `CASH`, no cap, no
+gameplay cooldown, no post-robbery immunity, and no voluntary transfer. Recorded in
 `open-owner-decisions.md`.

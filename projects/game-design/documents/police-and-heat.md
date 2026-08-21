@@ -56,9 +56,8 @@ alleys over the main street and gives the district's patrol routes a gameplay pu
 the warehouse job.
 
 The heat values above are MVP starting points for balance testing in the same sense as every
-other number in this document. The one robbery figure this surface will *not* propose is how
-much cash a robbery takes; that is a loss percentage and it is Owner decision D17, recorded in
-`robbery-and-pvp.md` section 6.
+other number in this document. Phase 1 transfers all carried cash; post-MVP robbery balance
+tuning is recorded in `robbery-and-pvp.md` section 6.
 
 A failed robbery attempt still costs the initiator heat. Otherwise probing for an unbanked
 target would be free, and the correct strategy would be to attempt a robbery on everyone you
@@ -162,5 +161,5 @@ both the district's most wanted and the house's floor manager.
 ## 9. Open Owner decisions
 
 D7 (offline heat decay: none, slow, or full reset), D10 (arrest hold durations; dead time
-is a retention risk on a small server), D17 (robbery transfer share, which changes how
-punitive the robbery heat values need to be). Recorded in `open-owner-decisions.md`.
+is a retention risk on a small server), and post-MVP robbery balance tuning. Recorded in
+`open-owner-decisions.md`.

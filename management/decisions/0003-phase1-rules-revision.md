@@ -1,7 +1,7 @@
 # Decision 0003 - Phase 1 rules revision
 
-- Status: Proposed
-- Owner gate: Required
+- Status: Approved for Phase 1; post-MVP tuning open
+- Owner gate: Approved for Phase 1 on 2026-08-21
 - Related ticket: `management/backlog/0003-phase1-rules-and-local-backend-contract.md`
 - Raised by: Game design and backend surfaces, Phase 1
 - Supersedes in part: `management/decisions/0002-mvp-economy-and-house-edge.md` guarantee 2
@@ -48,8 +48,8 @@ stash, mailing, or rake.
 
 **Robbery and automatic PvP.** Every point in the district resolves server-side to `SAFE` (casino
 and police station interiors, the casino entrance apron) or `HOSTILE` (everything else). PvP is
-automatic in `HOSTILE` space with no opt-in and no PvE mode, bounded only by spawn, zone-exit,
-and victim-recovery immunity windows. Robbery is a non-lethal subdual with a fixed server-side
+automatic in `HOSTILE` space with no opt-in and no PvE mode, bounded by a short spawn protection
+window only. Robbery is a non-lethal subdual with a fixed server-side
 state machine, no weapons, no health, and no damage model.
 
 **LOOTABLE versus PROTECTED.** Only carried `CASH` and contraband crates are lootable. Banked
@@ -68,11 +68,12 @@ forward-only idempotent migrations, caller-supplied idempotency keys that return
 result on replay, all-or-nothing transaction groups, and one-to-one record-to-table mapping so
 the Decision 0001 service replaces it as a backend-only change.
 
-**What is not being decided here.** The robbery transfer share and cap (D17), the robbery
-cooldown (D18), and every jackpot odd, paytable, contribution share, seed, and stake (D22) are
-loss percentages and odds. The design surface is not permitted to invent them, so they are
-specified as unset with no default, and the server refuses to enable the system whose parameters
-are unset rather than guessing a value.
+**Developer-tuned defaults approved for Phase 1.** Robbery transfers 100% of carried `CASH`,
+has no absolute cap, no gameplay cooldown, and no post-robbery victim immunity; only explicit
+`LOOTABLE` items may additionally be selected. Jackpot terminals use four fixed stake tiers in
+budget, middle, and VIP zones, with defaults and odds recorded in `casino-games-mvp.md`.
+The developer may tune the server-only versioned config, but the server rejects missing config
+or RTP at/above 100% and clients cannot change it.
 
 ## Alternatives considered
 
@@ -94,9 +95,8 @@ whether a stranger is a threat, carrying cash stops being a risk and the cage be
 that the voluntary-transfer ban exists to close, as well as making quest progress losable.
 
 **Ship the TypeScript/PostgreSQL service now instead of a local adapter.** Avoids building a
-throwaway. Rejected because Decision 0001 is still an open Owner gate (D16), so this would settle
-the technology choice by implementation rather than by decision. The adapter's interface is scoped
-so the service replaces it without gameplay changes.
+throwaway. Rejected because the external service contract is still out of Phase 1; the adapter's
+interface is scoped so the service replaces it without gameplay changes.
 
 **Keep four concurrent players.** Lower replication cost and a smaller test matrix. Rejected
 because four players in a 400m district almost never meet, which would make robbery a mechanic
@@ -135,8 +135,8 @@ that argument fails and this record should be reopened.
 ## Owner decision
 
 Owner-approved for Phase 1 direction on 2026-08-21: Windows-only, ten players, four games,
-no voluntary trading, hostile-zone robbery/PvP, and the local adapter boundary. Decision 0003
-remains Proposed until D17, D18, and D22 are resolved. The related open items are D17 through D25 in
-`projects/game-design/documents/open-owner-decisions.md`. D17 and D22 are the two that no
-verification pass can work around, because they are the loss percentages and odds this project has
-deliberately left unset; D21 is the amendment to Decision 0002 guarantee 2 that item 4 requires.
+no voluntary trading, hostile-zone robbery/PvP, full carried-cash robbery with optional
+lootable items, no gameplay robbery cooldown, and developer-tuned zone/tier jackpot defaults.
+Decision 0003 remains Proposed only for post-MVP tuning; D17, D18, D21, D22, D23, D24, and D25
+are resolved for the Phase 1 prototype. The related open items are D17 through D25 in
+`projects/game-design/documents/open-owner-decisions.md`.

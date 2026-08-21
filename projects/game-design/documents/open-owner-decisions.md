@@ -12,12 +12,11 @@ scratch.
 
 Nothing here blocks documentation. Items marked **Blocks Phase 1** must resolve before the
 system they name can be switched on, and the servers for those systems are specified to refuse
-to start rather than to guess a default. Items marked **Blocks Phase 4** must resolve before
+to enable missing or invalid configuration rather than to guess a default. Items marked **Blocks Phase 4** must resolve before
 the economy/jobs/quest implementation phase begins.
 
-D17 through D25 were added in Phase 1 by ticket 0003. D17 and D22 are the two that a
-verification pass cannot work around: they are the loss percentages and odds this surface is
-forbidden to invent.
+D17 through D25 were added in Phase 1 by ticket 0003. The Phase 1 working defaults resolve
+robbery and jackpot enablement; post-MVP tuning remains open.
 
 | ID | Question | Recommendation | Blocks | Raised in |
 | --- | --- | --- | --- | --- |
@@ -37,15 +36,15 @@ forbidden to invent.
 | D14 | Is owner-seat forfeiture aggressive enough to keep the endgame reachable for others | Add a soft cap: voluntary or forced rotation after N days held | Phase 4 | `hidden-quest-back-room.md` 5 |
 | D15 | Should late-joining players get a faster second path into the quest chain | No for MVP; the chain being slow is what makes the Insignia items mean something | Post-MVP | `hidden-quest-back-room.md` 9 |
 | D16 | Confirm Decision 0001 (Unreal 5 + C++ + dedicated server + EOS + Postgres/TypeScript) | Owner gate already open; design surface has no preference beyond needing server authority | Phase 1 | `management/decisions/0001-engine-and-service-stack.md` |
-| D17 | What share of a victim's carried `CASH` does a robbery take, and is there an absolute per-robbery cap | **No recommendation offered.** This is a loss percentage and this surface is not permitted to invent one. The mechanism is built parameterised and the server refuses to enable robbery until a value is set | Blocks Phase 1 (robbery) | `robbery-and-pvp.md` 6 |
-| D18 | Per-aggressor cooldown between robberies | A cooldown should exist so robbery is a choice rather than a rotation; the duration is a balance value the Owner should set alongside D17 | Blocks Phase 1 (robbery) | `robbery-and-pvp.md` 6 |
+| D17 | What share of a victim's carried `CASH` does a robbery take, and is there an absolute per-robbery cap | **Approved:** transfer 100% of `CASH.carried`, with no absolute cap. The robber may additionally select zero or more explicitly `LOOTABLE` items; protected/bound/quest/skin items are excluded | Resolved for Phase 1 | `robbery-and-pvp.md` 6 |
+| D18 | Per-aggressor cooldown between robberies | **Approved:** no gameplay cooldown and no post-robbery victim immunity. Keep only transport-level anti-spam rate limiting | Resolved for Phase 1 | `robbery-and-pvp.md` 6 |
 | D19 | Non-lethal subdual, or lethal PvP combat with weapons and damage | Non-lethal. It delivers the requested conflict without putting hit registration and combat prediction on the critical path, and it keeps losses bounded to carried cash | Phase 1 | `robbery-and-pvp.md` 4.1 |
 | D20 | Should a hard cap on `CASH.carried` exist, forcing deposits above a threshold | No cap. The banking decision is more interesting than a rule that makes it for the player | Phase 4 | `robbery-and-pvp.md` 6 |
-| D21 | Amend economy constraint C2 from "no player-to-player transfer" to "no **voluntary** transfer, robbery excepted" | Approve the amendment; it is the minimum change that admits robbery, and the safety argument rests on the voluntary/involuntary distinction rather than on transfer volume | Blocks Phase 1 (robbery) | `economy-closed-loop.md` C2 |
-| D22 | Jackpot machine outcome space, paytable, hit odds, pool contribution share, seed, and fixed stake | **No recommendation offered.** These are odds and this surface is not permitted to invent them. The only commitment made is that total RTP including the contribution must be strictly below 100% and must be derived by exhaustive enumeration, not asserted | Blocks Phase 1 (jackpot) | `casino-games-mvp.md` 6.3 |
-| D23 | Confirm ten concurrent players as the MVP target, replacing the Phase 0 figure of four | Confirm ten. It is what makes robbery encounters happen at all, and the cost is a job-station queue and a replication budget to measure | Phase 1 | `gdd-casino-world-mvp.md` 5 |
-| D24 | Confirm Windows-only for the MVP: Windows client and Windows dedicated server, no Linux target | Confirm. One build target for the phase whose job is proving the rules; the persistence adapter is designed so adding Linux later touches no gameplay code | Phase 1 | `gdd-casino-world-mvp.md` 5 |
-| D25 | Confirm a local, versioned, file-backed persistence adapter for Phase 1, with the TypeScript/PostgreSQL service deferred until Decision 0001 is approved | Confirm. It unblocks reconnect and persistence work now behind an interface narrow enough that swapping the implementation is a backend-only change | Phase 1 | `projects/backend/documents/local-profile-persistence-adapter.md` |
+| D21 | Amend economy constraint C2 from "no player-to-player transfer" to "no **voluntary** transfer, robbery excepted" | **Approved:** no voluntary trading/gifting/drop/stash; robbery is the sole involuntary transfer path | Resolved for Phase 1 | `economy-closed-loop.md` C2 |
+| D22 | Jackpot machine outcome space, paytable, hit odds, pool contribution share, seed, and fixed stake | **Approved for prototype:** four fixed tiers per budget/middle/VIP zone; defaults are 100/500/2,000/10,000, 500/2,000/10,000/50,000, and 2,000/10,000/50,000/250,000 `CHIPS`; odds 0.02/0.05/0.10/0.25%; contribution 8%; seeds 10,000/50,000/250,000. Developer-only versioned config may tune values; server rejects RTP >= 100% | Resolved for Phase 1; post-MVP balance open | `casino-games-mvp.md` 6.1.1 |
+| D23 | Confirm ten concurrent players as the MVP target, replacing the Phase 0 figure of four | Confirmed ten | Resolved for Phase 1 | `gdd-casino-world-mvp.md` 5 |
+| D24 | Confirm Windows-only for the MVP: Windows client and Windows dedicated server, no Linux target | Confirmed Windows-only | Resolved for Phase 1 | `gdd-casino-world-mvp.md` 5 |
+| D25 | Confirm a local, versioned, file-backed persistence adapter for Phase 1, with the TypeScript/PostgreSQL service deferred | Confirmed local adapter; external service contract remains later | Resolved for Phase 1 | `projects/backend/documents/local-profile-persistence-adapter.md` |
 
 ## Decisions this surface did NOT make and will not
 

@@ -79,7 +79,7 @@ to be mistakenly modelled as wallets, so the table states plainly that they are 
 | `successorQueue` | Ordered `SUCCESSOR` players awaiting the owner seat | No buyout is debited while queued (HQ7) |
 | `casinoUpkeepDueUtc` | Next S5 upkeep charge | Owners only |
 | `schemaVersion` | Record format version for the whole store | Section 4 |
-| `economyParameters` | The configured values of every parameter in section 9 | Refuses unset values (I14) |
+| `economyParameters` | The configured values of every parameter in section 9 | Refuses missing/invalid/client-editable values (I14) |
 
 ### 2.3 Idempotency record
 
@@ -230,25 +230,26 @@ than left to the server implementation.
 
 ## 9. Parameters the adapter must refuse to guess
 
-The adapter loads `economyParameters` at startup and **refuses to start** if any parameter that
-this project has left unset is still unset, per economy invariant I14. The values are Owner
-decisions and neither this surface nor an implementation agent may default them.
+The adapter loads `economyParameters` at startup and **refuses to enable** a system if its
+versioned configuration is missing, invalid, or client-editable, per economy invariant I14.
+Working defaults are recorded in the game-design documents; post-MVP balance tuning remains
+server/developer-owned.
 
 | Parameter group | Owner gate | Document |
 | --- | --- | --- |
-| `robberyCarriedCashShareBps`, `robberyCarriedCashCap`, `robberyContrabandShare` | D17 | `robbery-and-pvp.md` 6 |
-| `robberyCooldownSeconds` | D18 | `robbery-and-pvp.md` 6 |
-| `jackpotOutcomeSpace`, `jackpotPaytable`, `jackpotHitOdds`, `jackpotContributionBps`, `jackpotSeed`, `jackpotFixedStake` | D22 | `casino-games-mvp.md` 6.3 |
+| `robberyCarriedCashShareBps`, `robberyCarriedCashCap`, `robberyLootSelection` | Phase 1 defaults | `robbery-and-pvp.md` 6 |
+| `robberyCooldownSeconds`, `victimRecoveryImmunitySeconds` | Phase 1 defaults (`0`, `0`) | `robbery-and-pvp.md` 6 |
+| `jackpotOutcomeSpace`, `jackpotPaytable`, `jackpotHitOdds`, `jackpotContributionBps`, `jackpotSeed`, `jackpotStakeByZoneAndTier` | Versioned developer config | `casino-games-mvp.md` 6.3 |
 | Offline heat decay rate | D7 | `police-and-heat.md` 4 |
 
-Refusing to start is deliberate. A zero default would ship a robbery that takes nothing and a
-jackpot that never pays, both of which look like working systems in a smoke test and are only
-caught in balance testing, long after the code has been trusted.
+Refusing to enable is deliberate. Missing or malformed config must never silently become a
+zero-value robbery or a jackpot that never pays; those failures can look like working systems
+in a smoke test and surface only after the code has been trusted.
 
 The narrower alternative is also acceptable and is what `robbery-and-pvp.md` RB13 and
 `casino-games-mvp.md` G12 actually require: refuse to **enable the specific system** whose
-parameters are unset, while the rest of the server starts. Phase 1 should implement the narrow
-form, because it lets the persistence and reconnect work proceed while D17 and D22 are open.
+parameters are missing or invalid, while the rest of the server starts. Phase 1 should implement the narrow
+form, because it lets the persistence and reconnect work proceed while post-MVP balance tuning remains open.
 
 ## 10. Replacement path to TypeScript and PostgreSQL
 
@@ -321,7 +322,7 @@ from anywhere else.
 | PA16 | At most one `OWNER` and one `FLOOR_MANAGER` exist in the server record at any instant |
 | PA17 | No operation transfers value between two `playerId` values as a primitive |
 | PA18 | The public interface exposes no file path, SQL string, connection, or transport type |
-| PA19 | The adapter refuses to enable robbery or the jackpot machine while any of their section 9 parameters is unset |
+| PA19 | The adapter refuses to enable robbery or a jackpot zone while configuration is missing, invalid, or client-editable |
 | PA20 | Each record kind in section 2 maps to exactly one table under the Decision 0001 service, with repeated groups in child tables |
 
 PA4, PA6, and PA8 are the three that everything else in Phase 1 rests on: without them,
@@ -332,5 +333,5 @@ forces a choice, those five come first.
 ## 13. Open Owner decisions
 
 D25 (confirm this local adapter for Phase 1), D7 (offline heat decay rate, which this adapter
-stores but does not choose), D17 and D22 (the unset parameters in section 9). All recorded in
+stores but does not choose), and post-MVP balance tuning. All recorded in
 `projects/game-design/documents/open-owner-decisions.md`.

@@ -13,8 +13,8 @@ Owner-approved decision record.
 
 Both are Proposed for Owner review under
 `management/backlog/0003-phase1-rules-and-local-backend-contract.md` and depend on D25 plus
-the unresolved D17/D18/D22 game parameters. Neither defines an HTTP API, a wire protocol, or a
-SQL schema: those remain out of Phase 1.
+server-only working configuration. Neither defines an HTTP API, a wire protocol, or a SQL schema:
+those remain out of Phase 1.
 
 Phase 1 is deliberately in-process and local. The TypeScript/PostgreSQL service proposed in
 `management/decisions/0001-engine-and-service-stack.md` is deferred, and the adapter interface is

@@ -188,11 +188,11 @@ document wins.
 | --- | --- | --- |
 | Economy | `CASH` carried and banked in the world, `CHIPS` in the casino, five faucets, seven sinks, no voluntary player transfer | `economy-closed-loop.md` |
 | Jobs | 3 legal jobs (delivery, valet, bar), 1 crime job (warehouse), all server-arbitrated | `jobs-and-employment.md` |
-| Casino games | Slots (5.175% edge), single-zero roulette (2.7027%), 6-deck blackjack reshuffled every round, jackpot machine (odds unset, D22) | `casino-games-mvp.md` |
+| Casino games | Slots (5.175% edge), single-zero roulette (2.7027%), 6-deck blackjack reshuffled every round, jackpot machine with four zone tiers | `casino-games-mvp.md` |
 | Shop | 42 fixed-price cosmetics in 6 slots, 4 quest-only Insignia items, no loot boxes | `shop-and-cosmetics.md` |
 | Hidden quest | Q0 to Q5: noticed -> vouched -> recruited -> dealer -> floor manager -> owner | `hidden-quest-back-room.md` |
 | Police heat | 0-100 in 5 tiers; tier 3 refuses the casino door and the shop | `police-and-heat.md` |
-| Robbery and PvP | Automatic PvP outside the casino safe zone; only carried `CASH` and contraband are lootable | `robbery-and-pvp.md` |
+| Robbery and PvP | Automatic PvP outside the casino safe zone; all carried `CASH` and selected explicit `LOOTABLE` items are eligible | `robbery-and-pvp.md` |
 
 ## 8. MVP scope fence
 
@@ -261,7 +261,7 @@ ticket instead.
 | R8 | Casino games feel like a slot-machine skinner box rather than a game | Retention | Blackjack's low edge, `STANDING` on volume not losses, quest chain as the real goal |
 | R9 | Arrest hold time is dead time on a small server | Retention | Short holds; open decision D10 |
 | R10 | Scope creep from "one more casino game" | Schedule | Section 8 scope fence is normative |
-| R11 | Robbery becomes griefing and drives new players off | Retention, and the worst risk added in Phase 1 | Safe zone, banking, three immunity windows, non-lethal only, nothing bound is lootable, heat cost on every attempt |
+| R11 | Robbery becomes griefing and drives new players off | Retention, and the worst risk added in Phase 1 | Safe zone, banking, no protected-item loss, non-lethal only, heat cost on every attempt |
 | R12 | A robbery settlement leg is lost and currency is created or destroyed | Breaks the closed loop | Single atomic transaction group per `robberyId`; invariants RB6, RB7; assertion on circulating total |
 | R13 | Two concurrent jackpot hits pay the same pool twice | Currency duplication at the largest single magnitude in the game | Pool read and debit inside the payout transaction; invariant G15 with a concurrency test |
 | R14 | The local persistence adapter becomes load-bearing and is expensive to replace | Rework in the Postgres phase | Narrow versioned interface, no SQL or transport in its public surface, 1:1 record-to-table mapping (backend adapter document) |
@@ -271,8 +271,8 @@ ticket instead.
 
 - Every system named in ticket 0001 scope item 6 and ticket 0003 has a normative document.
 - Every economic value has a named faucet, sink, or explicit redistribution path.
-- Every stated house edge is derived, not asserted, and every undecided one is marked unset
-  with an Owner gate rather than guessed.
+- Every stated house edge is derived, not asserted; working jackpot defaults are versioned and
+  must pass enumeration before a zone is enabled.
 - Every open product question is recorded in `open-owner-decisions.md`, not resolved here.
 - No document in this surface specifies a network protocol, schema, or API shape; those
   require Decision 0001 approval and belong to the Unreal and backend surfaces.

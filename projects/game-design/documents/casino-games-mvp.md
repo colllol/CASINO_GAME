@@ -205,18 +205,39 @@ one rare outcome pays that whole pool.
 
 | Element | Specification |
 | --- | --- |
-| Cabinets | 1, on the casino floor, distinct from the 4 slot machines |
-| Stake | `CHIPS` only, fixed bet per spin (no bet sizing, so the pool contribution rate is uniform) |
+| Cabinets | One logical jackpot system with zone-specific terminals in budget, middle, and VIP casino areas |
+| Stake | `CHIPS` only, four fixed tiers per zone: LOW, MEDIUM, HIGH, EXTREME |
 | Outcome space | A single uniform draw from a fixed, enumerable outcome set, exactly as slots |
 | Prize tiers | A base paytable plus one `JACKPOT` outcome |
 | Jackpot funding | `jackpotContributionBps` of each wager, routed into `jackpotPoolAccrued` |
 | Jackpot payout | The entire accrued pool, then the pool resets to `jackpotSeed` |
 | Pool visibility | Current pool is replicated to clients for display; it is server-owned |
 
-A fixed bet is a deliberate simplification, not an oversight. Variable bets on a progressive
-prize require either proportional eligibility (confusing) or a flat prize regardless of stake
-(exploitable by minimum-betting until the pool is large). One stake removes the whole class
-of problem.
+Fixed tiers keep the UI and server contract deterministic while letting each casino area signal
+its audience. A tier is selected before the spin and cannot be changed by the client after the
+round locks. The pool and audit stream are scoped per casino zone, not shared across zones.
+
+### 6.1.1 Owner-approved developer defaults
+
+All values are server-only, versioned configuration. A developer may tune them between builds
+or during a controlled test session; a player, casino owner, or client packet cannot change them.
+
+| Zone | LOW | MEDIUM | HIGH | EXTREME | Seed |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Budget | 100 | 500 | 2,000 | 10,000 | 10,000 |
+| Middle | 500 | 2,000 | 10,000 | 50,000 | 50,000 |
+| VIP | 2,000 | 10,000 | 50,000 | 250,000 | 250,000 |
+
+Values are `CHIPS`. Default jackpot hit odds by tier are `0.02%`, `0.05%`, `0.10%`, and
+`0.25%`; the default pool contribution is `8%` of the stake. These are starting values for
+balance testing, not a promise of final RTP. The server must enumerate the configured outcome
+space and reject a config whose total RTP is not strictly below 100%.
+
+The working outcome space is 10,000 uniform slots per zone/tier. `SMALL` occupies 1,000 slots
+and pays 2x stake, `MEDIUM` occupies 500 slots and pays 10x, and `LARGE` occupies 100 slots
+and pays 20x. The remaining slots are `MISS`, except that 2, 5, 10, or 25 of those remaining
+slots become `JACKPOT` for LOW, MEDIUM, HIGH, or EXTREME respectively. The base paytable RTP
+is 90%; the 8% pool contribution leaves room below 100% before any one-time seed effect.
 
 ### 6.2 The pool is not a faucet
 
@@ -232,20 +253,20 @@ The seed is the only currency ever introduced from outside, it is a fixed one-ti
 first server start, and it is not a repeating faucet. If the Owner sets the seed to zero the
 machine is exactly zero-sum against its own players from the first spin.
 
-### 6.3 Unset parameters (Owner gate D22)
+### 6.3 Server configuration and developer tuning
 
-Odds and paytables are the definition of a loss percentage, and this surface is not permitted
-to settle them. Every number below is therefore **unset**, and the server must refuse to
-enable the jackpot machine while any of them is unset.
+Odds and paytables are the definition of a loss percentage. The Owner approved a configurable
+developer-owned model for Phase 1. The server loads a versioned config and refuses to enable a
+zone if any required field is missing or if the enumerated RTP is 100% or higher.
 
 | Parameter | Meaning | Value |
 | --- | --- | --- |
-| `jackpotOutcomeSpace` | Size and composition of the outcome set | Unset - D22 |
-| `jackpotPaytable` | Base prize multipliers per winning outcome | Unset - D22 |
-| `jackpotHitOdds` | Probability of the `JACKPOT` outcome per spin | Unset - D22 |
-| `jackpotContributionBps` | Share of each wager routed to the pool | Unset - D22 |
-| `jackpotSeed` | Pool value at first start and after each hit | Unset - D22 |
-| `jackpotFixedStake` | The fixed per-spin bet in `CHIPS` | Unset - D22 |
+| `jackpotOutcomeSpace` | Size and composition of the outcome set | Developer config, versioned |
+| `jackpotPaytable` | `SMALL=2x`, `MEDIUM=10x`, `LARGE=20x`; `JACKPOT=pool` | Developer config, versioned |
+| `jackpotHitOdds` | Default probability per tier | 2/5/10/25 bps |
+| `jackpotContributionBps` | Share of each wager routed to the pool | 800 bps default |
+| `jackpotSeed` | Pool value at first start and after each hit | Zone table above |
+| `jackpotStakeByZoneAndTier` | Four fixed stakes in each zone | Zone table above |
 
 What this surface *does* commit to, and what the Owner is being asked to approve values
 against: the machine's total RTP including the jackpot contribution must be strictly below
@@ -279,7 +300,7 @@ is not acceptable at any odds.
 | G9 | A bet below table minimum or above table maximum is rejected server-side |
 | G10 | No payout can produce a fractional chip |
 | G11 | Table margin credits `houseMarginAccrued`; no table path mints currency into a wallet beyond a settled win |
-| G12 | The jackpot machine refuses to accept a wager while any D22 parameter is unset |
+| G12 | The jackpot machine refuses a wager when its versioned developer config is missing, invalid, or RTP is >= 100% |
 | G13 | A jackpot payout equals the pool balance at draw time, debits the pool by exactly that amount, and resets it to `jackpotSeed` |
 | G14 | `jackpotPoolAccrued` never goes negative and is credited only by that machine's own margin |
 | G15 | Two concurrent jackpot hits cannot both be paid the same pool |
@@ -307,5 +328,5 @@ and heat consequences, which a rake is not.
 ## 9. Open Owner decisions
 
 D2 (house edge targets), D11 (per-round reshuffle vs. realism), D12 (slot max bet of 100
-chips versus the 2500 table maximum), D22 (all jackpot machine odds, paytable, contribution
-share, seed, and fixed stake). Recorded in `open-owner-decisions.md`.
+chips versus the 2500 table maximum), and post-MVP jackpot balance tuning. D22 is resolved for
+Phase 1 by the zone/tier defaults and developer-only versioned configuration above.

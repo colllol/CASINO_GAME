@@ -90,7 +90,7 @@ reconnect cannot double-pay. This is a backend contract requirement, recorded in
 
 | ID | Sink | Magnitude | Notes |
 | --- | --- | --- | --- |
-| S1 | Casino house margin | 0.5% to 5.2% of wagered volume across the three tuned games; jackpot machine unset (D22) | Primary sink, see section 5 |
+| S1 | Casino house margin | 0.5% to 5.2% of wagered volume across the tuned games; jackpot uses versioned zone/tier config | Primary sink, see section 5 |
 | S2 | Cosmetic purchase | 150 to 12000 `CASH` | Permanent, no resale, see `shop-and-cosmetics.md` |
 | S3 | Police fine | 200 to 3500 `CASH` by heat tier | Cleared at booking desk |
 | S4 | Bribe | 2x the equivalent fine | Optional fast heat clear, raises suspicion |
@@ -115,12 +115,12 @@ Each MVP game is tuned to a fixed house edge. The full paytables and derivations
 | Slots | 5.175% (measured, exhaustive) | 94.825% |
 | Roulette (single zero) | 2.7027% (uniform, all bet types) | 97.2973% |
 | Blackjack (house rules) | ~0.55% against basic strategy; higher in practice | ~99.45% best case |
-| Jackpot machine | Unset - Owner gate D22 | Unset - Owner gate D22 |
+| Jackpot machine | Developer-configured by zone/tier; defaults in `casino-games-mvp.md` | Must remain below 100% RTP by enumeration |
 
 The slots and roulette figures are verified by enumeration, not estimated. Blackjack's
 realised edge must be measured during balance testing because it depends on how well the
-player population plays. The jackpot machine's odds and paytable are deliberately left unset
-by this surface; see `casino-games-mvp.md` section 6 and Owner decision D22.
+player population plays. The jackpot machine's odds and paytable use the working developer
+defaults in `casino-games-mvp.md` section 6; post-MVP balance tuning remains open.
 
 Because every table is negative expected value and jobs are the only faucets, total
 currency in circulation trends downward without work. The economy is therefore
@@ -167,8 +167,10 @@ The consequence worth understanding: the jackpot cannot pay more than players ha
 lost to that machine plus its configured seed, so the headline prize grows with play rather
 than being funded by the economy at large.
 
-The seed value, the contribution share, and the hit odds are all unset pending Owner decision
-D22.
+The seed value, contribution share, hit odds, and four stake tiers are controlled by the
+server-only versioned defaults in `casino-games-mvp.md`. Developers may tune them between
+builds, but the server rejects missing or player-editable configuration and requires RTP below
+100%.
 
 ## 7. Reserved levers (not in MVP, listed to prevent accidental invention)
 
@@ -200,7 +202,7 @@ something else.
 | I11 | `CASH.carried` and `CASH.banked` are one currency; deposit and withdrawal are 1:1, atomic, and change no total |
 | I12 | Only `CASH.carried` is reachable by robbery; `CASH.banked` and `CHIPS` are never reachable (RB5) |
 | I13 | A jackpot payout never exceeds `jackpotPoolAccrued` and debits it by exactly the amount paid |
-| I14 | The server refuses to start with any economy parameter in the unset state (robbery share, jackpot odds, jackpot contribution, jackpot seed) |
+| I14 | The server refuses to enable robbery or a jackpot zone with missing, invalid, or client-editable configuration |
 
 These are the acceptance targets for the transaction tests named in ticket 0001's
 verification plan and extended by ticket 0003.
@@ -208,6 +210,5 @@ verification plan and extended by ticket 0003.
 ## 9. Open Owner decisions
 
 Recorded in `open-owner-decisions.md`: D2 (house edge values), D3 (crime income parity),
-D6 (no voluntary player trading, as narrowed by C2), D7 (offline heat decay), D17 (robbery
-transfer share), D20 (carried-cash cap), D21 (C2 amendment), D22 (jackpot odds, contribution
-share, and seed).
+D7 (offline heat decay), D19 (lethal PvP), D20 (carried-cash cap), and post-MVP jackpot tuning.
+D6/D17/D18/D21/D22/D23/D24/D25 are resolved for the Phase 1 prototype.

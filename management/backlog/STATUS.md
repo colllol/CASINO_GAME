@@ -7,7 +7,7 @@ This file is a derived index. Ticket files are authoritative for existence; each
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
-| [0001](0001-casino-world-mvp-foundation.md) | P0 | Casino world MVP foundation | Cross-surface | Claude, Codex | Owner | Phase 1 active; D17/D18/D22 remain |
+| [0001](0001-casino-world-mvp-foundation.md) | P0 | Casino world MVP foundation | Cross-surface | Claude, Codex | Owner | Phase 1 active; Unreal toolchain and post-MVP balance gates remain |
 
 ## Open
 
@@ -18,9 +18,9 @@ This file is a derived index. Ticket files are authoritative for existence; each
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
-| [0003](0003-phase1-rules-and-local-backend-contract.md) | P0 | Phase 1 rules and local backend adapter contract | Game design + Backend | Claude | D17/D18/D22 | Contract complete; resolve robbery and jackpot parameters |
 
 ## Closed
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
+| [0003](0003-phase1-rules-and-local-backend-contract.md) | P0 | Phase 1 rules and local backend adapter contract | Game design + Backend | Claude | None | Closed with T1-T78/audit evidence; post-MVP balance tuning is follow-up work |
