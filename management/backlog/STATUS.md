@@ -14,7 +14,7 @@ This file is a derived index. Ticket files are authoritative for existence; each
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |
 | --- | --- | --- | --- | --- | --- | --- |
 | [0002](0002-phase1-unreal-bootstrap.md) | P0 | Phase 1 Unreal bootstrap and offline prototype | Unreal | Codex | Unreal toolchain | Static pass merged `b0241b6`; install UE5.4 for Editor/Server/offline smoke |
-| [0004](0004-phase2-local-persistence-implementation.md) | P0 | Phase 2 local persistence implementation and contract tests | Backend | Codex | None | `ctx_003fbbe852ba` / `phase2-backend`; local JSON adapter, event replay, idempotency and Windows tests |
+| [0004](0004-phase2-local-persistence-implementation.md) | P0 | Phase 2 local persistence implementation and contract tests | Backend | Codex | None | `task_b9f5a12ac26c` / `phase2-backend`; reviewing existing adapter and 63-test suite |
 ## Awaiting Owner
 
 | ID | Priority | Title | Surface | Agents | Waiting on | Detail |

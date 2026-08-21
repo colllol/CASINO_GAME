@@ -9,7 +9,7 @@
   `management/decisions/0001-engine-and-service-stack.md`,
   `management/decisions/0003-phase1-rules-revision.md`
 - Orca Run: `run_48a5d2b749e8`
-- Orca Task: `task_e8d45c9c8d2c` (Codex, Dispatch `ctx_003fbbe852ba`, child `phase2-backend`)
+- Orca Task: `task_b9f5a12ac26c` (Codex continuation; prior `task_e8d45c9c8d2c` / `ctx_003fbbe852ba` stopped before report; child `phase2-backend`)
 
 ## Context
 
