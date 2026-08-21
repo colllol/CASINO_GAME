@@ -13,4 +13,7 @@ Saved/
 .env.*
 !.env.example
 
+# Node.js dependencies
+node_modules/
+
 # Large source assets must be tracked through Git LFS when introduced.
