@@ -1,0 +1,16 @@
+# Unreal Engine generated content
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+.vscode/ipch/
+*.VC.db
+*.sln
+
+# Local tooling and secrets
+.env
+.env.*
+!.env.example
+
+# Large source assets must be tracked through Git LFS when introduced.
